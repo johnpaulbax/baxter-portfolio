@@ -12,10 +12,15 @@ test('content configuration includes every required portfolio record', () => {
 test("projects and internship media follow the approved priority order", () => {
   expect(projects.map((project) => project.title)).toEqual([
     "BaxterLab",
+    "Windows Endpoint + ServiceNow Homelab",
     "AVOID",
     "Document Tracking System",
-    "File Integrity Monitoring System",
   ]);
+  expect(projects[1]).toMatchObject({
+    subtitle: "Endpoint Support & ITSM Lab",
+    role: "Homelab",
+    url: "https://github.com/johnpaulbax/windows-endpoint-servicenow-homelab",
+  });
   expect(internshipStages.map((stage) => stage.title)).toEqual([
     "Joined the Team",
     "Built the System",

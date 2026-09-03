@@ -159,6 +159,17 @@ export const projects = [
     contribution: "Built and documented the lab environment, eight simulated support incidents, and their diagnosis, remediation, verification, and closure.",
   },
   {
+    title: "Windows Endpoint + ServiceNow Homelab",
+    subtitle: "Endpoint Support & ITSM Lab",
+    role: "Homelab",
+    tech: ["Windows Endpoint", "PowerShell", "ServiceNow", "Incident Management"],
+    description:
+      "A practical endpoint-support and IT service management lab connecting Windows troubleshooting workflows with ServiceNow incident documentation.",
+    contribution:
+      "Documented repeatable endpoint diagnosis, remediation, verification, and ServiceNow ticket-handling workflows in a Windows homelab environment.",
+    url: "https://github.com/johnpaulbax/windows-endpoint-servicenow-homelab",
+  },
+  {
     title: "AVOID",
     subtitle: "Advanced Vehicle Optimization & Intelligent Dispatch",
     role: "Capstone project",
@@ -177,16 +188,6 @@ export const projects = [
       "A real-time PHP, Laravel, and MySQL document tracking system deployed to replace a paper-based workflow.",
     contribution:
       "Led backend development, configured XAMPP, deployed the production system, resolved end-user connectivity issues, and supported government staff during rollout.",
-  },
-  {
-    title: "File Integrity Monitoring System",
-    subtitle: "Wazuh File Integrity Monitoring",
-    role: "Homelab",
-    tech: ["Wazuh", "Ubuntu"],
-    description:
-      "A Wazuh and Ubuntu monitoring lab covering SIEM fundamentals and real-time file integrity monitoring.",
-    contribution:
-      "Configured the stack and troubleshot Agent–Manager connectivity.",
   },
 ];
 
