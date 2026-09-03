@@ -115,6 +115,7 @@ test("Windows Endpoint project exposes its support workflow and evidence", () =>
   expect(screen.getByText("User report")).toBeInTheDocument();
   expect(screen.getAllByTestId("endpoint-servicenow-workflow")).toHaveLength(8);
   expect(screen.getAllByRole("button", { name: /open endpoint\/servicenow evidence/i })).toHaveLength(4);
+  expect(screen.queryByRole("link", { name: "View project repository" })).not.toBeInTheDocument();
 });
 
 test("flagship project appears first and AVOID keeps its video", () => {

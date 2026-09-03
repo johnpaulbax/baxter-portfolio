@@ -729,11 +729,6 @@ function Projects() {
                   <span key={t}>{t}</span>
                 ))}
               </div>
-              {p.url && (
-                <a className="repo-link" href={p.url} target="_blank" rel="noreferrer">
-                  View project repository <ExternalLink size={16} />
-                </a>
-              )}
               {p.title === "AVOID" && <VideoPlayer />}
               {p.title === "BaxterLab" && <HomelabRepository />}
               {p.title === "Windows Endpoint + ServiceNow Homelab" && <EndpointServiceNowShowcase />}
