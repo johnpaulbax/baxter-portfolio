@@ -558,48 +558,130 @@ function VideoPlayer() {
     </div>
   );
 }
-function HomelabRepository() {
-  const [selected, setSelected] = useState<number | null>(null);
-  const dialogRef = useRef<HTMLDivElement>(null);
+type EvidenceItem = { title: string; src: string; caption: string };
+
+function EvidenceViewer({
+  evidence,
+  project,
+  closeLabel,
+  selected,
+  setSelected,
+  returnFocus,
+}: {
+  evidence: readonly EvidenceItem[];
+  project: string;
+  closeLabel: string;
+  selected: number;
+  setSelected: (index: number | null) => void;
+  returnFocus: React.RefObject<HTMLButtonElement | null>;
+}) {
+  const dialogRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const returnFocus = useRef<HTMLButtonElement>(null);
+  const indexRef = useRef(selected);
+  const setSelectedRef = useRef(setSelected);
+  const reduce = useReducedMotion();
+
   useEffect(() => {
-    if (selected === null) return;
+    indexRef.current = selected;
+    setSelectedRef.current = setSelected;
+  }, [selected, setSelected]);
+
+  useEffect(() => {
     const focusTarget = returnFocus.current;
+    const previousRootOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
     const background = Array.from(document.body.children).filter(
       (element) => !element.contains(dialogRef.current),
     );
-    closeRef.current?.focus();
+    closeRef.current?.focus({ preventScroll: true });
     background.forEach((element) => element.setAttribute("inert", ""));
+    document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
     const key = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelected(null);
+      if (event.key === "Escape") setSelectedRef.current(null);
+      if (event.key === "ArrowLeft") setSelectedRef.current((indexRef.current + evidence.length - 1) % evidence.length);
+      if (event.key === "ArrowRight") setSelectedRef.current((indexRef.current + 1) % evidence.length);
       if (event.key === "Tab") {
-        event.preventDefault();
-        closeRef.current?.focus();
+        const controls = Array.from(dialogRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? []);
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
       }
     };
     document.addEventListener("keydown", key);
     return () => {
       document.removeEventListener("keydown", key);
       background.forEach((element) => element.removeAttribute("inert"));
-      document.body.style.overflow = "";
-      focusTarget?.focus();
+      document.documentElement.style.overflow = previousRootOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+      focusTarget?.focus({ preventScroll: true });
     };
-  }, [selected]);
+  }, [evidence.length, returnFocus]);
+
+  const item = evidence[selected];
+  return createPortal(
+    <motion.div
+      className="credential-backdrop"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onMouseDown={(event) => event.target === event.currentTarget && setSelected(null)}
+    >
+      <motion.section
+        ref={dialogRef}
+        className="credential-inspector"
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${item.title} evidence`}
+        initial={reduce ? false : { opacity: 0, scale: 0.97, y: 8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: reduce ? 1 : 0.98 }}
+        transition={{ duration: reduce ? 0 : 0.36, ease: [0.22, 1, 0.36, 1] }}
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <header className="credential-inspector__header">
+          <div><span>EVIDENCE // VERIFIED</span><h2>{item.title}</h2></div>
+          <div className="credential-inspector__count">{String(selected + 1).padStart(2, "0")} / {String(evidence.length).padStart(2, "0")}</div>
+          <button ref={closeRef} aria-label={closeLabel} onClick={() => setSelected(null)}><X /></button>
+        </header>
+        <div className="credential-inspector__media">
+          <button aria-label="Previous evidence" onClick={() => setSelected((selected + evidence.length - 1) % evidence.length)}><ChevronLeft /></button>
+          <figure>
+            <motion.img
+              key={item.src}
+              src={item.src}
+              alt={item.caption}
+              initial={reduce ? false : { opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+              animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
+              transition={{ duration: 0.45 }}
+            />
+            <span className="credential-scan" aria-hidden="true" />
+            <figcaption>{String(selected + 1).padStart(2, "0")} / {String(evidence.length).padStart(2, "0")} — {item.caption}</figcaption>
+          </figure>
+          <button aria-label="Next evidence" onClick={() => setSelected((selected + 1) % evidence.length)}><ChevronRight /></button>
+        </div>
+        <footer className="credential-inspector__footer"><div><strong>{project}</strong><span>EVIDENCE RECORD</span><em><i /> VERIFIED</em></div></footer>
+      </motion.section>
+    </motion.div>,
+    document.body,
+  );
+}
+
+function HomelabRepository() {
+  const [selected, setSelected] = useState<number | null>(null);
+  const returnFocus = useRef<HTMLButtonElement>(null);
   return (
     <div className="repo-showcase">
       <div className="repo-architecture">
-        <div className="repo-meta">
-          <span>{homelabRepo.domain}</span>
-          <span>{homelabRepo.network}</span>
-        </div>
+        <div className="repo-meta"><span>{homelabRepo.domain}</span><span>{homelabRepo.network}</span></div>
         <img src={homelabRepo.architecture} alt="BaxterLab network architecture connecting SERVER01, CLIENT01, and TICKET01" />
-        <div className="repo-systems">
-          {homelabRepo.systems.map(([host, platform, role]) => (
-            <article key={host}><small>{host}</small><strong>{platform}</strong><span>{role}</span></article>
-          ))}
-        </div>
+        <div className="repo-systems">{homelabRepo.systems.map(([host, platform, role]) => <article key={host}><small>{host}</small><strong>{platform}</strong><span>{role}</span></article>)}</div>
       </div>
       <div className="repo-columns">
         <div><h4>Repository documentation</h4><ol className="repo-docs">{homelabRepo.docs.map((doc, index) => <li data-testid="homelab-doc" key={doc}><b>{String(index + 1).padStart(2, "0")}</b>{doc}</li>)}</ol></div>
@@ -607,93 +689,28 @@ function HomelabRepository() {
       </div>
       <a className="repo-link" href={homelabRepo.url} target="_blank" rel="noreferrer">View BaxterLab repository <ExternalLink size={16} /></a>
       <p className="repo-disclaimer">Eight simulated lab incidents demonstrate a structured support workflow; they are not presented as production support experience.</p>
-      {selected !== null && createPortal(<motion.div ref={dialogRef} className="evidence-modal" role="dialog" aria-modal="true" aria-label={`${homelabRepo.evidence[selected].title} evidence`} initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onMouseDown={(event) => event.target === event.currentTarget && setSelected(null)}><button ref={closeRef} aria-label="Close evidence" onClick={() => setSelected(null)}><X /></button><figure><img src={homelabRepo.evidence[selected].src} alt={homelabRepo.evidence[selected].caption} /><figcaption>{homelabRepo.evidence[selected].caption}</figcaption></figure></motion.div>, document.body)}
+      {selected !== null && <EvidenceViewer evidence={homelabRepo.evidence} project="BaxterLab" closeLabel="Close evidence" selected={selected} setSelected={setSelected} returnFocus={returnFocus} />}
     </div>
   );
 }
+
 function EndpointServiceNowShowcase() {
   const [selected, setSelected] = useState<number | null>(null);
-  const dialogRef = useRef<HTMLDivElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
   const returnFocus = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    if (selected === null) return;
-    const focusTarget = returnFocus.current;
-    const background = Array.from(document.body.children).filter(
-      (element) => !element.contains(dialogRef.current),
-    );
-    closeRef.current?.focus();
-    background.forEach((element) => element.setAttribute("inert", ""));
-    document.body.style.overflow = "hidden";
-    const key = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelected(null);
-      if (event.key === "Tab") {
-        event.preventDefault();
-        closeRef.current?.focus();
-      }
-    };
-    document.addEventListener("keydown", key);
-    return () => {
-      document.removeEventListener("keydown", key);
-      background.forEach((element) => element.removeAttribute("inert"));
-      document.body.style.overflow = "";
-      focusTarget?.focus();
-    };
-  }, [selected]);
   return (
     <div className="repo-showcase">
       <div className="repo-architecture">
-        <div className="repo-meta">
-          <span>{endpointServiceNowRepo.endpoint}</span>
-          <span>{endpointServiceNowRepo.service}</span>
-          <span>{endpointServiceNowRepo.network}</span>
-        </div>
-        <div className="repo-systems">
-          {endpointServiceNowRepo.systems.map(([host, platform, role]) => (
-            <article key={host}><small>{host}</small><strong>{platform}</strong><span>{role}</span></article>
-          ))}
-        </div>
+        <div className="repo-meta"><span>{endpointServiceNowRepo.endpoint}</span><span>{endpointServiceNowRepo.service}</span><span>{endpointServiceNowRepo.network}</span></div>
+        <div className="repo-systems">{endpointServiceNowRepo.systems.map(([host, platform, role]) => <article key={host}><small>{host}</small><strong>{platform}</strong><span>{role}</span></article>)}</div>
       </div>
       <div className="repo-columns">
-        <div>
-          <h4>Support workflow</h4>
-          <ol className="repo-docs">
-            {endpointServiceNowRepo.workflow.map((step, index) => (
-              <li data-testid="endpoint-servicenow-workflow" key={step}><b>{String(index + 1).padStart(2, "0")}</b>{step}</li>
-            ))}
-          </ol>
-        </div>
-        <div>
-          <h4>Incident case studies</h4>
-          <ol className="repo-docs">
-            {endpointServiceNowRepo.docs.map((doc, index) => (
-              <li key={doc}><b>{String(index + 1).padStart(2, "0")}</b>{doc}</li>
-            ))}
-          </ol>
-        </div>
+        <div><h4>Support workflow</h4><ol className="repo-docs">{endpointServiceNowRepo.workflow.map((step, index) => <li data-testid="endpoint-servicenow-workflow" key={step}><b>{String(index + 1).padStart(2, "0")}</b>{step}</li>)}</ol></div>
+        <div><h4>Incident case studies</h4><ol className="repo-docs">{endpointServiceNowRepo.docs.map((doc, index) => <li key={doc}><b>{String(index + 1).padStart(2, "0")}</b>{doc}</li>)}</ol></div>
       </div>
-      <div>
-        <h4>Selected evidence</h4>
-        <div className="repo-evidence">
-          {endpointServiceNowRepo.evidence.map((item, index) => (
-            <button
-              key={item.title}
-              aria-label={`Open endpoint/servicenow evidence: ${item.title}`}
-              onClick={(event) => { returnFocus.current = event.currentTarget; setSelected(index); }}
-            >
-              <img loading="lazy" src={item.src} alt="" /><span>{item.title}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+      <div><h4>Selected evidence</h4><div className="repo-evidence">{endpointServiceNowRepo.evidence.map((item, index) => <button key={item.title} aria-label={`Open endpoint/servicenow evidence: ${item.title}`} onClick={(event) => { returnFocus.current = event.currentTarget; setSelected(index); }}><img loading="lazy" src={item.src} alt="" /><span>{item.title}</span></button>)}</div></div>
       <a className="repo-link" href={endpointServiceNowRepo.url} target="_blank" rel="noreferrer">View Windows Endpoint + ServiceNow repository <ExternalLink size={16} /></a>
       <p className="repo-disclaimer">Six simulated incidents demonstrate L1 endpoint support and ServiceNow ITSM practice in a controlled homelab environment.</p>
-      {selected !== null && createPortal(
-          <motion.div ref={dialogRef} className="evidence-modal" role="dialog" aria-modal="true" aria-label={`${endpointServiceNowRepo.evidence[selected].title} endpoint/servicenow evidence`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onMouseDown={(event) => event.target === event.currentTarget && setSelected(null)}>
-            <button ref={closeRef} aria-label="Close endpoint/servicenow evidence" onClick={() => setSelected(null)}><X /></button>
-            <figure><img src={endpointServiceNowRepo.evidence[selected].src} alt={endpointServiceNowRepo.evidence[selected].caption} /><figcaption>{endpointServiceNowRepo.evidence[selected].caption}</figcaption></figure>
-          </motion.div>, document.body,
-        )}
+      {selected !== null && <EvidenceViewer evidence={endpointServiceNowRepo.evidence} project="Windows Endpoint + ServiceNow Homelab" closeLabel="Close endpoint/servicenow evidence" selected={selected} setSelected={setSelected} returnFocus={returnFocus} />}
     </div>
   );
 }

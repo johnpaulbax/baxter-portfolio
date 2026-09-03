@@ -122,18 +122,35 @@ test("evidence viewers restore portfolio interaction after closing", async () =>
   render(<App />);
 
   await userEvent.click(screen.getByRole("button", { name: /^open active directory evidence$/i }));
-  expect(document.querySelector(".evidence-modal")).toBeInTheDocument();
+  expect(document.querySelector(".credential-inspector")).toBeInTheDocument();
   expect(screen.getByRole("dialog", { name: /active directory evidence/i })).toBeInTheDocument();
   await userEvent.click(screen.getByRole("button", { name: /close evidence$/i }));
   await waitFor(() => expect(screen.queryByRole("dialog", { name: /active directory evidence/i })).not.toBeInTheDocument());
 
+  await userEvent.click(screen.getByRole("heading", { name: "Windows Endpoint + ServiceNow Homelab" }));
   await userEvent.click(screen.getByRole("button", { name: /open endpoint\/servicenow evidence: print spooler/i }));
-  expect(screen.getByRole("dialog", { name: /print spooler endpoint\/servicenow evidence/i })).toBeInTheDocument();
+  expect(screen.getByRole("dialog", { name: /print spooler evidence/i })).toBeInTheDocument();
   await userEvent.click(screen.getByRole("button", { name: /close endpoint\/servicenow evidence/i }));
-  await waitFor(() => expect(screen.queryByRole("dialog", { name: /print spooler endpoint\/servicenow evidence/i })).not.toBeInTheDocument());
+  await waitFor(() => expect(screen.queryByRole("dialog", { name: /print spooler evidence/i })).not.toBeInTheDocument());
 
   await userEvent.click(screen.getByRole("button", { name: /^open network recovery evidence$/i }));
   expect(screen.getByRole("dialog", { name: /network recovery evidence/i })).toBeInTheDocument();
+});
+
+test("evidence viewer uses the credential-style inspector layout", async () => {
+  render(<App />);
+  await userEvent.click(screen.getByRole("button", { name: /^open active directory evidence$/i }));
+
+  const dialog = screen.getByRole("dialog", { name: /active directory evidence/i });
+  expect(dialog).toHaveClass("credential-inspector");
+  expect(within(dialog).getByText("EVIDENCE // VERIFIED")).toBeInTheDocument();
+  expect(within(dialog).getByText("01 / 04")).toBeInTheDocument();
+  expect(within(dialog).getByRole("button", { name: /next evidence/i })).toBeInTheDocument();
+  expect(within(dialog).getByRole("img")).toHaveAttribute("src", "/media/baxterlab-active-directory.png");
+
+  await userEvent.click(within(dialog).getByRole("button", { name: /next evidence/i }));
+  expect(within(dialog).getByText("02 / 04")).toBeInTheDocument();
+  expect(within(dialog).getByRole("img")).toHaveAttribute("src", "/media/baxterlab-osticket.png");
 });
 
 test("flagship project appears first and AVOID keeps its video", () => {
