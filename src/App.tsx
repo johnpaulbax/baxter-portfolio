@@ -19,6 +19,7 @@ import {
 import {
   contact,
   credentials,
+  endpointServiceNowRepo,
   homelabRepo,
   incidents,
   internshipStages,
@@ -610,6 +611,94 @@ function HomelabRepository() {
     </div>
   );
 }
+function EndpointServiceNowShowcase() {
+  const [selected, setSelected] = useState<number | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const returnFocus = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (selected === null) return;
+    const focusTarget = returnFocus.current;
+    const background = Array.from(document.body.children).filter(
+      (element) => !element.contains(dialogRef.current),
+    );
+    closeRef.current?.focus();
+    background.forEach((element) => element.setAttribute("inert", ""));
+    document.body.style.overflow = "hidden";
+    const key = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelected(null);
+      if (event.key === "Tab") {
+        event.preventDefault();
+        closeRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", key);
+    return () => {
+      document.removeEventListener("keydown", key);
+      background.forEach((element) => element.removeAttribute("inert"));
+      document.body.style.overflow = "";
+      focusTarget?.focus();
+    };
+  }, [selected]);
+  return (
+    <div className="repo-showcase">
+      <div className="repo-architecture">
+        <div className="repo-meta">
+          <span>{endpointServiceNowRepo.endpoint}</span>
+          <span>{endpointServiceNowRepo.service}</span>
+          <span>{endpointServiceNowRepo.network}</span>
+        </div>
+        <div className="repo-systems">
+          {endpointServiceNowRepo.systems.map(([host, platform, role]) => (
+            <article key={host}><small>{host}</small><strong>{platform}</strong><span>{role}</span></article>
+          ))}
+        </div>
+      </div>
+      <div className="repo-columns">
+        <div>
+          <h4>Support workflow</h4>
+          <ol className="repo-docs">
+            {endpointServiceNowRepo.workflow.map((step, index) => (
+              <li data-testid="endpoint-servicenow-workflow" key={step}><b>{String(index + 1).padStart(2, "0")}</b>{step}</li>
+            ))}
+          </ol>
+        </div>
+        <div>
+          <h4>Incident case studies</h4>
+          <ol className="repo-docs">
+            {endpointServiceNowRepo.docs.map((doc, index) => (
+              <li key={doc}><b>{String(index + 1).padStart(2, "0")}</b>{doc}</li>
+            ))}
+          </ol>
+        </div>
+      </div>
+      <div>
+        <h4>Selected evidence</h4>
+        <div className="repo-evidence">
+          {endpointServiceNowRepo.evidence.map((item, index) => (
+            <button
+              key={item.title}
+              aria-label={`Open endpoint/servicenow evidence: ${item.title}`}
+              onClick={(event) => { returnFocus.current = event.currentTarget; setSelected(index); }}
+            >
+              <img loading="lazy" src={item.src} alt="" /><span>{item.title}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      <a className="repo-link" href={endpointServiceNowRepo.url} target="_blank" rel="noreferrer">View Windows Endpoint + ServiceNow repository <ExternalLink size={16} /></a>
+      <p className="repo-disclaimer">Six simulated incidents demonstrate L1 endpoint support and ServiceNow ITSM practice in a controlled homelab environment.</p>
+      <AnimatePresence>
+        {selected !== null && createPortal(
+          <motion.div ref={dialogRef} className="evidence-modal" role="dialog" aria-modal="true" aria-label={`${endpointServiceNowRepo.evidence[selected].title} endpoint/servicenow evidence`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onMouseDown={(event) => event.target === event.currentTarget && setSelected(null)}>
+            <button ref={closeRef} aria-label="Close endpoint/servicenow evidence" onClick={() => setSelected(null)}><X /></button>
+            <figure><img src={endpointServiceNowRepo.evidence[selected].src} alt={endpointServiceNowRepo.evidence[selected].caption} /><figcaption>{endpointServiceNowRepo.evidence[selected].caption}</figcaption></figure>
+          </motion.div>, document.body,
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 function Projects() {
   return (
     <Section
@@ -647,6 +736,7 @@ function Projects() {
               )}
               {p.title === "AVOID" && <VideoPlayer />}
               {p.title === "BaxterLab" && <HomelabRepository />}
+              {p.title === "Windows Endpoint + ServiceNow Homelab" && <EndpointServiceNowShowcase />}
             </div>
           </details>
         ))}

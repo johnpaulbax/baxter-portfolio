@@ -105,7 +105,16 @@ test("BaxterLab project exposes its repository architecture and documentation", 
   expect(screen.getByText("baxterlab.local")).toBeInTheDocument();
   expect(screen.getByText("192.168.10.0/24 LABNET")).toBeInTheDocument();
   expect(screen.getAllByTestId("homelab-doc")).toHaveLength(9);
-  expect(screen.getAllByRole("button", { name: /open .* evidence/i })).toHaveLength(4);
+  expect(screen.getAllByRole("button", { name: /^open (active directory|osticket|network recovery|wireshark dns) evidence$/i })).toHaveLength(4);
+});
+
+test("Windows Endpoint project exposes its support workflow and evidence", () => {
+  render(<App />);
+  expect(screen.getAllByText("ENDPOINT01")).not.toHaveLength(0);
+  expect(screen.getByText("ServiceNow Personal Developer Instance")).toBeInTheDocument();
+  expect(screen.getByText("User report")).toBeInTheDocument();
+  expect(screen.getAllByTestId("endpoint-servicenow-workflow")).toHaveLength(8);
+  expect(screen.getAllByRole("button", { name: /open endpoint\/servicenow evidence/i })).toHaveLength(4);
 });
 
 test("flagship project appears first and AVOID keeps its video", () => {

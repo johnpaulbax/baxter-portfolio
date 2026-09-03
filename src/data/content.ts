@@ -210,6 +210,42 @@ export const homelabRepo = {
   ],
 } as const;
 
+export const endpointServiceNowRepo = {
+  url: "https://github.com/johnpaulbax/windows-endpoint-servicenow-homelab",
+  endpoint: "ENDPOINT01",
+  platform: "Windows 11",
+  service: "ServiceNow Personal Developer Instance",
+  network: "VirtualBox // L1 HELPDESK LAB",
+  systems: [
+    ["ENDPOINT01", "Windows 11", "Endpoint troubleshooting workstation"],
+    ["SERVICENOW", "ServiceNow PDI", "Incident lifecycle and ITSM records"],
+  ],
+  workflow: [
+    "User report",
+    "Reproduce / validate",
+    "Diagnose",
+    "Remediate",
+    "Verify",
+    "Document in ServiceNow",
+    "Resolve",
+    "Close",
+  ],
+  docs: [
+    "Print Spooler / Printing Failure",
+    "Slow PC / High Memory Usage",
+    "Low Disk Space",
+    "Missing 7-Zip Application",
+    "Network Connectivity Failure",
+    "Device Manager Code 22",
+  ],
+  evidence: [
+    { title: "Print Spooler", src: asset("media/endpoint-servicenow-print-spooler.png"), caption: "Windows endpoint evidence showing the print spooler issue and its verified restoration." },
+    { title: "Network Recovery", src: asset("media/endpoint-servicenow-network-recovery.png"), caption: "Endpoint connectivity restored after re-enabling the network adapter." },
+    { title: "ServiceNow Work Notes", src: asset("media/endpoint-servicenow-work-notes.png"), caption: "ServiceNow work notes record diagnosis and remediation during the incident lifecycle." },
+    { title: "Incident Closed", src: asset("media/endpoint-servicenow-incident-closed.png"), caption: "A simulated ServiceNow incident closed after verification and resolution documentation." },
+  ],
+} as const;
+
 export const skillGroups = [
   {
     name: "Helpdesk",

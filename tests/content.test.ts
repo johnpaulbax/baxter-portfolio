@@ -1,4 +1,4 @@
-import { credentials, incidents, internshipStages, navigation, projects, skillGroups } from '../src/data/content';
+import { credentials, endpointServiceNowRepo, incidents, internshipStages, navigation, projects, skillGroups } from '../src/data/content';
 
 test('content configuration includes every required portfolio record', () => {
   expect(new Set(navigation.map(item => item.id)).size).toBe(9);
@@ -21,6 +21,13 @@ test("projects and internship media follow the approved priority order", () => {
     role: "Homelab",
     url: "https://github.com/johnpaulbax/windows-endpoint-servicenow-homelab",
   });
+  expect(endpointServiceNowRepo).toMatchObject({
+    endpoint: "ENDPOINT01",
+    platform: "Windows 11",
+    service: "ServiceNow Personal Developer Instance",
+  });
+  expect(endpointServiceNowRepo.workflow).toHaveLength(8);
+  expect(endpointServiceNowRepo.evidence).toHaveLength(4);
   expect(internshipStages.map((stage) => stage.title)).toEqual([
     "Joined the Team",
     "Built the System",
