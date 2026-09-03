@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="820" viewBox="0 0 1440 820" role="img" aria-labelledby="title desc">
+  <title id="title">BaxterLab IT Helpdesk Homelab architecture</title>
+  <desc id="desc">Three VirtualBox virtual machines share NAT connectivity and an isolated LABNET network. SERVER01 provides domain and infrastructure services, CLIENT01 is a domain-joined troubleshooting workstation, and TICKET01 hosts osTicket.</desc>
+
+  <rect width="1440" height="820" fill="#f8fafc"/>
+
+  <text x="720" y="42" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700">BaxterLab IT Helpdesk Homelab</text>
+  <text x="720" y="72" text-anchor="middle" fill="#475569" font-family="Segoe UI, Arial, sans-serif" font-size="15">VirtualBox topology | Windows domain services | L1 support testing</text>
+
+  <!-- Internet and NAT path -->
+  <g aria-label="Internet connection through VirtualBox NAT">
+    <rect x="640" y="98" width="160" height="42" rx="6" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+    <circle cx="672" cy="119" r="10" fill="none" stroke="#475569" stroke-width="1.5"/>
+    <path d="M662 119h20M672 109c-5 5-5 15 0 20M672 109c5 5 5 15 0 20" fill="none" stroke="#475569" stroke-width="1.2"/>
+    <text x="692" y="125" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600">Internet</text>
+
+    <line x1="720" y1="140" x2="720" y2="164" stroke="#64748b" stroke-width="2"/>
+    <rect x="585" y="164" width="270" height="54" rx="7" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+    <text x="720" y="187" text-anchor="middle" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">VirtualBox NAT</text>
+    <text x="720" y="205" text-anchor="middle" fill="#475569" font-family="Segoe UI, Arial, sans-serif" font-size="12">Connectivity for all three virtual machines</text>
+
+    <line x1="720" y1="218" x2="720" y2="248" stroke="#64748b" stroke-width="2"/>
+    <line x1="250" y1="248" x2="1190" y2="248" stroke="#64748b" stroke-width="2"/>
+    <line x1="250" y1="248" x2="250" y2="278" stroke="#64748b" stroke-width="2"/>
+    <line x1="720" y1="248" x2="720" y2="278" stroke="#64748b" stroke-width="2"/>
+    <line x1="1190" y1="248" x2="1190" y2="278" stroke="#64748b" stroke-width="2"/>
+    <circle cx="250" cy="248" r="4" fill="#64748b"/>
+    <circle cx="720" cy="248" r="4" fill="#64748b"/>
+    <circle cx="1190" cy="248" r="4" fill="#64748b"/>
+  </g>
+
+  <!-- SERVER01 -->
+  <g aria-label="SERVER01 Windows Server 2025 at 192.168.10.10">
+    <rect x="60" y="278" width="380" height="350" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+    <rect x="60" y="278" width="380" height="76" rx="8" fill="#eff6ff"/>
+    <path d="M60 346h380" stroke="#bfdbfe" stroke-width="1"/>
+    <rect x="86" y="299" width="34" height="34" rx="4" fill="#2563eb"/>
+    <rect x="93" y="306" width="20" height="6" rx="1" fill="#ffffff"/>
+    <rect x="93" y="316" width="20" height="6" rx="1" fill="#ffffff"/>
+    <circle cx="109" cy="309" r="1.5" fill="#2563eb"/>
+    <circle cx="109" cy="319" r="1.5" fill="#2563eb"/>
+    <text x="136" y="312" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="21" font-weight="700">SERVER01</text>
+    <text x="136" y="334" fill="#475569" font-family="Segoe UI, Arial, sans-serif" font-size="14">Central infrastructure server</text>
+
+    <text x="88" y="387" fill="#64748b" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="1">OPERATING SYSTEM</text>
+    <text x="88" y="411" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="16">Windows Server 2025</text>
+    <text x="88" y="450" fill="#64748b" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="1">LABNET ADDRESS</text>
+    <text x="88" y="474" fill="#1d4ed8" font-family="Consolas, Courier New, monospace" font-size="17" font-weight="700">192.168.10.10</text>
+    <text x="88" y="513" fill="#64748b" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="1">ROLES AND SERVICES</text>
+    <circle cx="94" cy="539" r="3" fill="#2563eb"/><text x="106" y="544" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="15">Active Directory Domain Services</text>
+    <circle cx="94" cy="565" r="3" fill="#2563eb"/><text x="106" y="570" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="15">DNS / DHCP / Group Policy</text>
+    <circle cx="94" cy="591" r="3" fill="#2563eb"/><text x="106" y="596" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="15">SMB file sharing</text>
+  </g>
+
+  <!-- CLIENT01 -->
+  <g aria-label="CLIENT01 Windows 11 Pro workstation with typical address 192.168.10.100">
+    <rect x="530" y="278" width="380" height="350" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+    <rect x="530" y="278" width="380" height="76" rx="8" fill="#f0fdfa"/>
+    <path d="M530 346h380" stroke="#99f6e4" stroke-width="1"/>
+    <rect x="556" y="300" width="38" height="27" rx="3" fill="none" stroke="#0f766e" stroke-width="2"/>
+    <line x1="575" y1="327" x2="575" y2="333" stroke="#0f766e" stroke-width="2"/>
+    <line x1="565" y1="333" x2="585" y2="333" stroke="#0f766e" stroke-width="2"/>
+    <text x="610" y="312" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="21" font-weight="700">CLIENT01</text>
+    <text x="610" y="334" fill="#475569" font-family="Segoe UI, Arial, sans-serif" font-size="14">Domain-joined support workstation</text>
+
+    <text x="558" y="387" fill="#64748b" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="1">OPERATING SYSTEM</text>
+    <text x="558" y="411" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="16">Windows 11 Pro</text>
+    <text x="558" y="450" fill="#64748b" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="1">TYPICAL LABNET ADDRESS</text>
+    <text x="558" y="474" fill="#0f766e" font-family="Consolas, Courier New, monospace" font-size="17" font-weight="700">192.168.10.100</text>
+    <text x="558" y="513" fill="#64748b" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="1">PURPOSE</text>
+    <circle cx="564" cy="539" r="3" fill="#0f766e"/><text x="576" y="544" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="15">Domain workstation</text>
+    <circle cx="564" cy="565" r="3" fill="#0f766e"/><text x="576" y="570" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="15">L1 troubleshooting endpoint</text>
+    <circle cx="564" cy="591" r="3" fill="#0f766e"/><text x="576" y="596" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="15">Wireshark network analysis</text>
+  </g>
+
+  <!-- TICKET01 -->
+  <g aria-label="TICKET01 Ubuntu Server 26.04.1 LTS at 192.168.10.20">
+    <rect x="1000" y="278" width="380" height="350" rx="8" fill="#ffffff" stroke="#c2410c" stroke-width="2"/>
+    <rect x="1000" y="278" width="380" height="76" rx="8" fill="#fff7ed"/>
+    <path d="M1000 346h380" stroke="#fed7aa" stroke-width="1"/>
+    <rect x="1026" y="299" width="38" height="32" rx="4" fill="#c2410c"/>
+    <path d="M1034 309l6 6-6 6M1044 321h11" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1080" y="312" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="21" font-weight="700">TICKET01</text>
+    <text x="1080" y="334" fill="#475569" font-family="Segoe UI, Arial, sans-serif" font-size="14">Helpdesk application server</text>
+
+    <text x="1028" y="387" fill="#64748b" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="1">OPERATING SYSTEM</text>
+    <text x="1028" y="411" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="16">Ubuntu Server 26.04.1 LTS</text>
+    <text x="1028" y="450" fill="#64748b" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="1">LABNET ADDRESS</text>
+    <text x="1028" y="474" fill="#c2410c" font-family="Consolas, Courier New, monospace" font-size="17" font-weight="700">192.168.10.20</text>
+    <text x="1028" y="513" fill="#64748b" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="1">ROLES AND SERVICES</text>
+    <circle cx="1034" cy="539" r="3" fill="#c2410c"/><text x="1046" y="544" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="15">osTicket</text>
+    <circle cx="1034" cy="565" r="3" fill="#c2410c"/><text x="1046" y="570" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="15">Apache web server</text>
+    <circle cx="1034" cy="591" r="3" fill="#c2410c"/><text x="1046" y="596" fill="#334155" font-family="Segoe UI, Arial, sans-serif" font-size="15">PHP runtime</text>
+  </g>
+
+  <!-- Isolated LABNET path -->
+  <g aria-label="VirtualBox LABNET isolated internal network">
+    <line x1="250" y1="628" x2="250" y2="688" stroke="#334155" stroke-width="2"/>
+    <line x1="720" y1="628" x2="720" y2="688" stroke="#334155" stroke-width="2"/>
+    <line x1="1190" y1="628" x2="1190" y2="688" stroke="#334155" stroke-width="2"/>
+    <line x1="250" y1="688" x2="1190" y2="688" stroke="#334155" stroke-width="3"/>
+    <circle cx="250" cy="688" r="5" fill="#334155"/>
+    <circle cx="720" cy="688" r="5" fill="#334155"/>
+    <circle cx="1190" cy="688" r="5" fill="#334155"/>
+
+    <rect x="480" y="666" width="480" height="112" rx="8" fill="#0f172a"/>
+    <text x="720" y="704" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="700">VirtualBox LABNET</text>
+    <text x="720" y="732" text-anchor="middle" fill="#cbd5e1" font-family="Consolas, Courier New, monospace" font-size="16">192.168.10.0/24</text>
+    <text x="720" y="758" text-anchor="middle" fill="#93c5fd" font-family="Segoe UI, Arial, sans-serif" font-size="15">Isolated internal network | baxterlab.local</text>
+  </g>
+</svg>
