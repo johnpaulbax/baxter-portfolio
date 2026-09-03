@@ -118,6 +118,24 @@ test("Windows Endpoint project exposes its support workflow and evidence", () =>
   expect(screen.queryByRole("link", { name: "View project repository" })).not.toBeInTheDocument();
 });
 
+test("evidence viewers restore portfolio interaction after closing", async () => {
+  render(<App />);
+
+  await userEvent.click(screen.getByRole("button", { name: /^open active directory evidence$/i }));
+  expect(document.querySelector(".evidence-modal")).toBeInTheDocument();
+  expect(screen.getByRole("dialog", { name: /active directory evidence/i })).toBeInTheDocument();
+  await userEvent.click(screen.getByRole("button", { name: /close evidence$/i }));
+  await waitFor(() => expect(screen.queryByRole("dialog", { name: /active directory evidence/i })).not.toBeInTheDocument());
+
+  await userEvent.click(screen.getByRole("button", { name: /open endpoint\/servicenow evidence: print spooler/i }));
+  expect(screen.getByRole("dialog", { name: /print spooler endpoint\/servicenow evidence/i })).toBeInTheDocument();
+  await userEvent.click(screen.getByRole("button", { name: /close endpoint\/servicenow evidence/i }));
+  await waitFor(() => expect(screen.queryByRole("dialog", { name: /print spooler endpoint\/servicenow evidence/i })).not.toBeInTheDocument());
+
+  await userEvent.click(screen.getByRole("button", { name: /^open network recovery evidence$/i }));
+  expect(screen.getByRole("dialog", { name: /network recovery evidence/i })).toBeInTheDocument();
+});
+
 test("flagship project appears first and AVOID keeps its video", () => {
   const { container } = render(<App />);
   const headings = screen.getAllByRole("heading", { level: 3 }).map((heading) => heading.textContent);

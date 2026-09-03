@@ -607,7 +607,7 @@ function HomelabRepository() {
       </div>
       <a className="repo-link" href={homelabRepo.url} target="_blank" rel="noreferrer">View BaxterLab repository <ExternalLink size={16} /></a>
       <p className="repo-disclaimer">Eight simulated lab incidents demonstrate a structured support workflow; they are not presented as production support experience.</p>
-      <AnimatePresence>{selected !== null && createPortal(<motion.div ref={dialogRef} className="evidence-modal" role="dialog" aria-modal="true" aria-label={`${homelabRepo.evidence[selected].title} evidence`} initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onMouseDown={(event) => event.target === event.currentTarget && setSelected(null)}><button ref={closeRef} aria-label="Close evidence" onClick={() => setSelected(null)}><X /></button><figure><img src={homelabRepo.evidence[selected].src} alt={homelabRepo.evidence[selected].caption} /><figcaption>{homelabRepo.evidence[selected].caption}</figcaption></figure></motion.div>, document.body)}</AnimatePresence>
+      {selected !== null && createPortal(<motion.div ref={dialogRef} className="evidence-modal" role="dialog" aria-modal="true" aria-label={`${homelabRepo.evidence[selected].title} evidence`} initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onMouseDown={(event) => event.target === event.currentTarget && setSelected(null)}><button ref={closeRef} aria-label="Close evidence" onClick={() => setSelected(null)}><X /></button><figure><img src={homelabRepo.evidence[selected].src} alt={homelabRepo.evidence[selected].caption} /><figcaption>{homelabRepo.evidence[selected].caption}</figcaption></figure></motion.div>, document.body)}
     </div>
   );
 }
@@ -688,14 +688,12 @@ function EndpointServiceNowShowcase() {
       </div>
       <a className="repo-link" href={endpointServiceNowRepo.url} target="_blank" rel="noreferrer">View Windows Endpoint + ServiceNow repository <ExternalLink size={16} /></a>
       <p className="repo-disclaimer">Six simulated incidents demonstrate L1 endpoint support and ServiceNow ITSM practice in a controlled homelab environment.</p>
-      <AnimatePresence>
-        {selected !== null && createPortal(
+      {selected !== null && createPortal(
           <motion.div ref={dialogRef} className="evidence-modal" role="dialog" aria-modal="true" aria-label={`${endpointServiceNowRepo.evidence[selected].title} endpoint/servicenow evidence`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onMouseDown={(event) => event.target === event.currentTarget && setSelected(null)}>
             <button ref={closeRef} aria-label="Close endpoint/servicenow evidence" onClick={() => setSelected(null)}><X /></button>
             <figure><img src={endpointServiceNowRepo.evidence[selected].src} alt={endpointServiceNowRepo.evidence[selected].caption} /><figcaption>{endpointServiceNowRepo.evidence[selected].caption}</figcaption></figure>
           </motion.div>, document.body,
         )}
-      </AnimatePresence>
     </div>
   );
 }
