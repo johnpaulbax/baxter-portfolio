@@ -11,16 +11,7 @@ coverage/
 !.env.example
 
 # Original source media retained in the workspace
-/AVOID_VIDEO.mp4
-/internship*.jpg
-/self portrait*.jpg
-/ENDPOINT SECURITY.png
-/FORTINET.png
-/NETWORK ADDRESSING AND BASIC TROUBLESHOOTING.png
-/NETWORK SUPPORT AND SECURITY.png
-/NETWORKING DEVICES AND BASIC CONFIGURATION.png
-/SECURITY AND CONNECTIVITY SUPPORT.png
+/source-media/
 
 # Full-resolution working copy; deployment uses avoid-demo-web.mp4
 /public/media/avoid-demo.mp4
-
